@@ -10,4 +10,5 @@ yarn add react-scripts
 yarn add react-icons
 yarn add react-router-dom
 yarn add web-vitals
+yarn add react@latest react-dom@latest
 ```
