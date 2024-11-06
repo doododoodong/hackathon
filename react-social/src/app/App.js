@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   Route,
-  Switch
+  Routes
 } from 'react-router-dom';
 import AppHeader from '../common/AppHeader';
 import Home from '../home/Home';
@@ -38,17 +38,17 @@ class App extends Component {
     });
 
     getCurrentUser()
-    .then(response => {
-      this.setState({
-        currentUser: response,
-        authenticated: true,
-        loading: false
+      .then(response => {
+        this.setState({
+          currentUser: response,
+          authenticated: true,
+          loading: false
+        });
+      }).catch(error => {
+        this.setState({
+          loading: false
+        });
       });
-    }).catch(error => {
-      this.setState({
-        loading: false
-      });  
-    });    
   }
 
   handleLogout() {
@@ -65,7 +65,7 @@ class App extends Component {
   }
 
   render() {
-    if(this.state.loading) {
+    if (this.state.loading) {
       return <LoadingIndicator />
     }
 
@@ -75,20 +75,30 @@ class App extends Component {
           <AppHeader authenticated={this.state.authenticated} onLogout={this.handleLogout} />
         </div>
         <div className="app-body">
-          <Switch>
-            <Route exact path="/" component={Home}></Route>           
-            <PrivateRoute path="/profile" authenticated={this.state.authenticated} currentUser={this.state.currentUser}
-              component={Profile}></PrivateRoute>
-            <Route path="/login"
-              render={(props) => <Login authenticated={this.state.authenticated} {...props} />}></Route>
-            <Route path="/signup"
-              render={(props) => <Signup authenticated={this.state.authenticated} {...props} />}></Route>
-            <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}></Route>  
-            <Route component={NotFound}></Route>
-          </Switch>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute authenticated={this.state.authenticated} currentUser={this.state.currentUser}>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={<Login authenticated={this.state.authenticated} />}
+            />
+            <Route
+              path="/signup"
+              element={<Signup authenticated={this.state.authenticated} />}
+            />
+            <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
-        <Alert stack={{limit: 3}} 
-          timeout = {3000}
+        <Alert stack={{ limit: 3 }}
+          timeout={3000}
           position='top-right' effect='slide' offset={65} />
       </div>
     );
