@@ -1,16 +1,17 @@
 package com.example.springsocial.repository;
 
-import com.example.springsocial.model.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.example.springsocial.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
-    Boolean existsByEmail(String email);
+	Boolean existsByEmail(String email);
 
 }
